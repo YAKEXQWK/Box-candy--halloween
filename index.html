@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🍬 Cubeta de Dulces Embrujada 🎃</title>
+    <style>
+        :root {
+            --bg-color: #0d0714;
+            --naranja-dulce: #ff6600;
+            --morado-neón: #a855f7;
+            --amarillo-brillo: #facc15;
+            --texto-claro: #f8fafc;
+        }
+
+        body {
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            background: radial-gradient(circle at 50% 30%, #2e1065 0%, #0d0714 85%);
+            color: var(--texto-claro);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        .contenedor-principal {
+            background: rgba(23, 15, 38, 0.95);
+            border: 3px solid var(--morado-neón);
+            border-radius: 24px;
+            padding: 20px;
+            max-width: 390px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(255, 102, 0, 0.2);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 18px;
+            color: var(--naranja-dulce);
+            margin-top: 0;
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.6);
+        }
+
+        .subtitulo {
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+
+        /* --- CUBETA DE DULCES Y ANIMACIÓN --- */
+        .escenario-cubeta {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 10px auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* DESTELLO DE LUZ BRILLANTE */
+        .destello-luz {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(250, 204, 21, 1) 0%, rgba(255, 102, 0, 0.8) 40%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0.1);
+            pointer-events: none;
+            z-index: 10;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease-out;
+        }
+
+        .destello-luz.activo {
+            opacity: 1;
+            transform: scale(1.6);
+            animation: ráfagaGiro 1.2s infinite linear;
+        }
+
+        @keyframes ráfagaGiro {
+            0% { transform: scale(1.6) rotate(0deg); }
+            100% { transform: scale(1.6) rotate(360deg); }
+        }
+
+        .cubeta-grafica {
+            font-size: 90px;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            filter: drop-shadow(0 0 15px var(--naranja-dulce));
+            position: relative;
+            z-index: 5;
+            animation: flotar 3s ease-in-out infinite;
+        }
+
+        .cubeta-grafica:hover:not(.abierta) {
+            transform: scale(1.08) rotate(3deg);
+        }
+
+        .cubeta-grafica.abrir-animacion {
+            animation: sacudirYAbrir 0.8s ease-in-out forwards;
+        }
+
+        @keyframes flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes sacudirYAbrir {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.1) rotate(-12deg); }
+            40% { transform: scale(1.1) rotate(12deg); }
+            60% { transform: scale(1.15) rotate(-12deg); }
+            80% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1.25) rotate(0deg); }
+        }
+
+        .btn-abrir {
+            background: linear-gradient(135deg, var(--naranja-dulce), #d97706);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 102, 0, 0.5);
+            font-family: inherit;
+            transition: transform 0.1s;
+        }
+
+        .btn-abrir:active { transform: scale(0.95); }
+
+        /* --- PANEL DE RECOMPENSAS DEFINITIVO --- */
+        .panel-recompensas {
+            background: rgba(13, 7, 20, 0.9);
+            border: 2px solid var(--amarillo-brillo);
+            border-radius: 14px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
+        }
+
+        .panel-recompensas h3 {
+            font-size: 12px;
+            color: var(--amarillo-brillo);
+            margin: 0 0 10px 0;
+            text-align: center;
+        }
+
+        .lista-premios {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item-premio {
+            background: rgba(46, 16, 101, 0.6);
+            border: 1px solid var(--morado-neón);
+            border-left: 4px solid var(--naranja-dulce);
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: aparecerItem 0.4s ease-out forwards;
+        }
+
+        @keyframes aparecerItem {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .oculto { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal">
+        <h1>🍬 Cubeta de Dulces Embrujada 🎃</h1>
+        <div class="subtitulo" id="texto-instrucciones">¡Toca la cubeta o el botón para destapar tus 4 premios únicos!</div>
+
+        <!-- Escenario de Animación -->
+        <div class="escenario-cubeta">
+            <div class="destello-luz" id="destello"></div>
+            <div class="cubeta-grafica" id="cubeta-emoji" onclick="abrirCubeta()">🪣</div>
+        </div>
+
+        <button class="btn-abrir" id="btn-accion" onclick="abrirCubeta()">¡ABRIR CUBETA DE DULCES!</button>
+
+        <!-- Panel de Resultados -->
+        <div class="panel-recompensas oculto" id="panel-resultados">
+            <h3 id="titulo-panel">🏆 TUS 4 PREMIOS OBTENIDOS</h3>
+            <ul class="lista-premios" id="lista-objetos">
+                <!-- Se genera dinámicamente -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE PREMIOS Y PORCENTAJES ---
+        const CATEGORIAS_PREMIOS = {
+            premio1: [
+                { nombre: "Caja de regalo pequeña 🎁", prob: 70 },
+                { nombre: "Caja mediana de regalo uno 🎁📦", prob: 40 },
+                { nombre: "Regalo grande! 🎁👑", prob: 10 }
+            ],
+            premio2: [
+                { nombre: "Caja de conechoco 📦🍫", prob: 30 },
+                { nombre: "Caja de bellotas 📦🌰", prob: 30 },
+                { nombre: "Caja de patitos de goma 📦🦆", prob: 30 }
+            ],
+            premio3: [
+                { nombre: "20 Robux 💰", prob: 30 },
+                { nombre: "10 Robux 💰", prob: 50 },
+                { nombre: "5 Robux 💰", prob: 70 },
+                { nombre: "30 Robux 💰", prob: 7 },
+                { nombre: "40 Robux 💰", prob: 4 },
+                { nombre: "Caja 2D 📐", prob: 80 },
+                { nombre: "Caja UGB 📦✨", prob: 80 }
+            ],
+            premio4: [
+                { nombre: "Chocodrilo 🐊", prob: 60 },
+                { nombre: "Jerbo gelatinoso 🐁🟢", prob: 50 },
+                { nombre: "Jumscar Pet 🐾🎃", prob: 30 },
+                { nombre: "Mono mecánico 🐒⚙️", prob: 45 },
+                { nombre: "Araña de momia 🕷️🩹", prob: 20 },
+                { nombre: "Slime naranja 🟠", prob: 15 },
+                { nombre: "Slime morado 🟣", prob: 10 },
+                { nombre: "Unicornio squeleton 🦄💀", prob: 5 }
+            ]
+        };
+
+        // --- SISTEMA DE PERSISTENCIA ---
+        let estadoCubeta = {
+            abierta: false,
+            premiosGanados: []
+        };
+
+        window.addEventListener('load', () => {
+            let guardado = localStorage.getItem('cubeta_dulces_halloween_save');
+            if (guardado) {
+                estadoCubeta = JSON.parse(guardado);
+            }
+
+            if (estadoCubeta.abierta) {
+                mostrarModoReingreso();
+            }
+        });
+
+        function guardarProgreso() {
+            localStorage.setItem('cubeta_dulces_halloween_save', JSON.stringify(estadoCubeta));
+        }
+
+        // --- LÓGICA DE SORTEO ALEATORIO ---
+        function sortearDeLista(lista) {
+            let candidatos = [];
+            lista.forEach(item => {
+                let tirada = Math.random() * 100;
+                if (tirada <= item.prob) {
+                    candidatos.push(item.nombre);
+                }
+            });
+
+            // Si por azar ninguno pasa la probabilidad, toma uno al azar de la lista
+            if (candidatos.length === 0) {
+                let r = Math.floor(Math.random() * lista.length);
+                return lista[r].nombre;
+            }
+
+            let finalIdx = Math.floor(Math.random() * candidatos.length);
+            return candidatos[finalIdx];
+        }
+
+        function generar4Premios() {
+            return [
+                sortearDeLista(CATEGORIAS_PREMIOS.premio1),
+                sortearDeLista(CATEGORIAS_PREMIOS.premio2),
+                sortearDeLista(CATEGORIAS_PREMIOS.premio3),
+                sortearDeLista(CATEGORIAS_PREMIOS.premio4)
+            ];
+        }
+
+        // --- ACCIÓN DE ABRIR CUBETA CON ANIMACIÓN ---
+        function abrirCubeta() {
+            if (estadoCubeta.abierta) return;
+
+            // Bloquear interacción durante animación
+            estadoCubeta.abierta = true;
+            estadoCubeta.premiosGanados = generar4Premios();
+            guardarProgreso();
+
+            const cubeta = document.getElementById('cubeta-emoji');
+            const destello = document.getElementById('destello');
+            const btn = document.getElementById('btn-accion');
+
+            btn.style.display = 'none';
+            cubeta.classList.add('abrir-animacion');
+
+            // Disparar destello brillante a mitad de animación
+            setTimeout(() => {
+                destello.classList.add('activo');
+                cubeta.innerText = "🎃🍬"; // Cambia el icono al estallar en dulces
+            }, 400);
+
+            // Finalizar animación y mostrar lista de premios
+            setTimeout(() => {
+                destello.classList.remove('activo');
+                renderizarListaPremios();
+                document.getElementById('panel-resultados').classList.remove('oculto');
+                document.getElementById('texto-instrucciones').innerText = "¡Caja abierta! Tus premios han sido registrados.";
+            }, 1000);
+        }
+
+        function renderizarListaPremios() {
+            const ul = document.getElementById('lista-objetos');
+            ul.innerHTML = "";
+
+            estadoCubeta.premiosGanados.forEach((item, idx) => {
+                let li = document.createElement('li');
+                li.className = 'item-premio';
+                li.style.animationDelay = `${idx * 0.15}s`;
+                li.innerHTML = `<span><b>Premio #${idx + 1}:</b> ${item}</span> <span style="color:#facc15;">✔</span>`;
+                ul.appendChild(li);
+            });
+        }
+
+        function mostrarModoReingreso() {
+            document.getElementById('cubeta-emoji').innerText = "🎃🍬";
+            document.getElementById('cubeta-emoji').classList.add('abierta');
+            document.getElementById('btn-accion').style.display = 'none';
+            document.getElementById('texto-instrucciones').innerText = "🔒 Ya abriste esta cubeta anteriormente. Aquí están tus 4 premios:";
+            document.getElementById('titulo-panel').innerText = "📜 TUS PREMIOS GUARDADOS";
+            renderizarListaPremios();
+            document.getElementById('panel-resultados').classList.remove('oculto');
+        }
+    </script>
+</body>
+  </html>
+  
